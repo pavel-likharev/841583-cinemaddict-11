@@ -2,6 +2,7 @@
 
 - Студент: [Павел Лихарев](https://up.htmlacademy.ru/ecmascript/11/user/841583).
 - Наставник: [Сергей Ufocoder](https://htmlacademy.ru/profile/id573445).
+-
 
 ---
 
