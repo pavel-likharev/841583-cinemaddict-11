@@ -16,18 +16,22 @@ const createCommentTemplate = (comment) => {
           </li>`;
 };
 
+const createListCommentsTemplate = (comments) => {
+  return `<ul class="film-details__comments-list">
+  ${comments.slice()
+    .map((comment) => {
+      return createCommentTemplate(comment);
+    })
+    .join(`\n`)}
+</ul>`;
+};
+
 export const createContainerCommentsTemplate = (comments, countComments) => {
   return `<div class="form-details__bottom-container">
   <section class="film-details__comments-wrap">
     <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${countComments}</span></h3>
 
-    <ul class="film-details__comments-list">
-      ${comments.slice()
-        .map((comment) => {
-          return createCommentTemplate(comment);
-        })
-        .join(`\n`)}
-    </ul>
+    ${createListCommentsTemplate(comments)}
 
     <div class="film-details__new-comment">
       <div for="add-emoji" class="film-details__add-emoji-label"></div>

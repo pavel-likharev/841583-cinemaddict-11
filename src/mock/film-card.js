@@ -1,5 +1,5 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from "../utils.js";
-import {generateComments} from "../mock/comments.js";
+import {getRandomIntegerNumber, getRandomArrayItem} from '../utils.js';
+import {generateComments} from '../mock/comments.js';
 
 const TitleItems = [
   `The Dance of Life`,
@@ -49,6 +49,8 @@ const getRandomGenres = () => {
   return genres;
 };
 
+const getRandomFilter = () => (getRandomIntegerNumber(1, 3) === 1) ? true : false;
+
 const generateFilmCard = () => {
   const randomGenres = getRandomGenres();
   const count = getRandomIntegerNumber(0, 5);
@@ -68,6 +70,9 @@ const generateFilmCard = () => {
     description: getRandomSentencesFromDescription(),
     countComments: count,
     comments: generateComments(count),
+    watchList: getRandomFilter(),
+    history: getRandomFilter(),
+    favorites: getRandomFilter(),
   };
 };
 

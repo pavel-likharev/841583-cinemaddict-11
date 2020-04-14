@@ -1,4 +1,5 @@
 import {removeElemenAfterKeydownEcs} from './utils.js';
+import {COUNT_CARDS, COUNT_EXTRA_CARDS, SHOWING_CARDS_COUNT_BY_BUTTON, SHOWING_CARDS_COUNT_ON_START} from './consts';
 import {createRankUserTemplate} from './components/rank-user.js';
 import {createBaseFiltersTemplate} from './components/base-filters.js';
 import {createFilmsContainerTemplate} from './components/films-container.js';
@@ -6,25 +7,38 @@ import {createMainNavTemplate} from './components/main-nav.js';
 import {createFilmCardTemplate} from './components/film-card.js';
 import {createShowMoreButtonTemplate} from './components/show-more-button.js';
 import {createExtraBoardFilmsTemplate} from './components/extra-board.js';
-import {generateFilmCards} from "./mock/film-card.js";
-import {createFilmDetailsTemplate} from "./components/film-details.js";
-
-
-const COUNT_CARDS = 17;
-const COUNT_EXTRA_CARDS = 2;
-const SHOWING_CARDS_COUNT_ON_START = 5;
-const SHOWING_CARDS_COUNT_BY_BUTTON = 5;
+import {generateFilmCards} from './mock/film-card.js';
+import {createFilmDetailsTemplate} from './components/film-details.js';
+import {createStaticticsTemplate} from './components/statistic';
 
 const filmCards = generateFilmCards(COUNT_CARDS);
 let cardPosters = ``;
-let showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
+
+// Это очень плохо, позже отрефакторю
+const getCountFilmsInFilterWatch = () => {
+  return filmCards.slice()
+  .reduce((sum, card) => card.watchList === true ? sum + 1 : sum, 0);
+};
+const getCountFilmsInFilterHistory = () => {
+  return filmCards.slice()
+  .reduce((sum, card) => card.history === true ? sum + 1 : sum, 0);
+};
+const getCountFilmsInFilterFavorites = () => {
+  return filmCards.slice()
+  .reduce((sum, card) => card.favorites === true ? sum + 1 : sum, 0);
+};
+const countFilmInFilters = {
+  watchList: getCountFilmsInFilterWatch(),
+  history: getCountFilmsInFilterHistory(),
+  favorites: getCountFilmsInFilterFavorites(),
+};
+// до этого
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 const renderPopup = (card, elem) => {
   card.addEventListener(`click`, () => {
-    // if (!document.querySelector(`.film-details`)) {
     if (document.querySelector(`.film-details`)) {
       document.querySelector(`.film-details`).remove();
     }
@@ -35,7 +49,6 @@ const renderPopup = (card, elem) => {
       detailFilmPopup.remove();
     });
     removeElemenAfterKeydownEcs(detailFilmPopup);
-    // }
   });
 };
 
@@ -51,7 +64,7 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
 render(siteHeaderElement, createRankUserTemplate(), `beforeend`);
-render(siteMainElement, createMainNavTemplate(), `beforeend`);
+render(siteMainElement, createMainNavTemplate(countFilmInFilters), `beforeend`);
 render(siteMainElement, createBaseFiltersTemplate(), `beforeend`);
 render(siteMainElement, createFilmsContainerTemplate(), `beforeend`);
 
@@ -59,8 +72,17 @@ const filmsContainerElement = siteMainElement.querySelector(`.films`);
 const boardFilmsContainer = filmsContainerElement.querySelector(`.films-list`);
 const boardFilmsElement = filmsContainerElement.querySelector(`.films-list`).querySelector(`.films-list__container`);
 
-filmCards.slice(0, showingCardsCount)
-  .forEach((card) => render(boardFilmsElement, createFilmCardTemplate(card), `beforeend`));
+let indexItemOfCards = 0;
+const renderCard = (items, countCards) => {
+  for (let i = 0; i < countCards; i++) {
+    if (indexItemOfCards < filmCards.length) {
+      render(boardFilmsElement, createFilmCardTemplate(items[indexItemOfCards]), `beforeend`);
+      indexItemOfCards++;
+    }
+  }
+};
+
+renderCard(filmCards, SHOWING_CARDS_COUNT_ON_START);
 updateListenerForCards();
 
 render(boardFilmsContainer, createShowMoreButtonTemplate(), `beforeend`);
@@ -68,14 +90,10 @@ render(boardFilmsContainer, createShowMoreButtonTemplate(), `beforeend`);
 const showMoreButton = boardFilmsContainer.querySelector(`.films-list__show-more`);
 
 showMoreButton.addEventListener(`click`, () => {
-  const prevCardsCount = showingCardsCount;
-  showingCardsCount = showingCardsCount + SHOWING_CARDS_COUNT_BY_BUTTON;
-
-  filmCards.slice(prevCardsCount, showingCardsCount)
-    .forEach((card) => render(boardFilmsElement, createFilmCardTemplate(card), `beforeend`));
+  renderCard(filmCards, SHOWING_CARDS_COUNT_BY_BUTTON);
   updateListenerForCards();
 
-  if (showingCardsCount >= filmCards.length) {
+  if (indexItemOfCards >= filmCards.length) {
     showMoreButton.remove();
   }
 });
@@ -89,14 +107,8 @@ const secondExtraBoardFilmsElement = extraBoardFilmsElements[1].querySelector(`.
 
 for (let i = 0; i < COUNT_EXTRA_CARDS; i++) {
   render(firstExtraBoardFilmsElement, createFilmCardTemplate(filmCards[0]), `beforeend`);
-}
-
-for (let i = 0; i < COUNT_EXTRA_CARDS; i++) {
-  render(secondExtraBoardFilmsElement, createFilmCardTemplate(filmCards[0]), `beforeend`);
+  render(secondExtraBoardFilmsElement, createFilmCardTemplate(filmCards[1]), `beforeend`);
 }
 
 const statisticsElement = document.querySelector(`.footer__statistics`);
-const createStaticticsTemplate = () => {
-  return `<p>${COUNT_CARDS} movies inside</p>`;
-};
 render(statisticsElement, createStaticticsTemplate(), `beforeend`);

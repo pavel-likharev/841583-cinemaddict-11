@@ -1,4 +1,4 @@
-import {getRandomArrayItem} from "../utils.js";
+import {getRandomArrayItem} from '../utils.js';
 
 const Emojis = [
   `sleeping`,

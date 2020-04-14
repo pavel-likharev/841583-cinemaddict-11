@@ -1,14 +1,63 @@
-import {createContainerCommentsTemplate} from "../components/comments.js";
-// import {getRandomIntegerNumber} from "../utils.js";
+import {createContainerCommentsTemplate} from '../components/comments.js';
+
+const createDetailTemplate = (term, cell) => {
+  return `<tr class="film-details__row">
+  <td class="film-details__term">${term}</td>
+  <td class="film-details__cell">${cell}</td>
+</tr>`;
+};
 
 const createGenresTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
 
+const createDetailsTableTemplate = (details, card) => {
+  return `<table class="film-details__table">
+  ${details.slice()
+    .map((detail) => {
+      return createDetailTemplate(detail.title, detail.value);
+    })
+    .join(`\n`)}
+  <tr class="film-details__row">
+    <td class="film-details__term">${card.genres.length > 1 ? `Genres` : `Genre`}</td>
+    <td class="film-details__cell">
+      ${card.genres.slice()
+      .map((genre) => {
+        return createGenresTemplate(genre);
+      })
+      .join(`\n`)}
+    </td>
+  </tr>
+</table>`;
+};
+
 export const createFilmDetailsTemplate = (card) => {
-
-  const {title, poster, age, rating, director, writers, actors, year, duration, country, genres, description, comments, countComments} = card;
-
+  const details = [
+    {
+      title: `Director`,
+      value: card.director
+    },
+    {
+      title: `Writers`,
+      value: card.writers
+    },
+    {
+      title: `Actors`,
+      value: card.actors
+    },
+    {
+      title: `Release date`,
+      value: card.year
+    },
+    {
+      title: `Runtime`,
+      value: card.duration
+    },
+    {
+      title: `Country`,
+      value: card.country
+    },
+  ];
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="form-details__top-container">
@@ -17,62 +66,27 @@ export const createFilmDetailsTemplate = (card) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="${poster}" alt="">
+          <img class="film-details__poster-img" src="${card.poster}" alt="">
 
-          <p class="film-details__age">${age}</p>
+          <p class="film-details__age">${card.age}</p>
         </div>
 
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
-              <h3 class="film-details__title">${title}</h3>
-              <p class="film-details__title-original">Original: ${title}</p>
+              <h3 class="film-details__title">${card.title}</h3>
+              <p class="film-details__title-original">Original: ${card.title}</p>
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${rating}</p>
+              <p class="film-details__total-rating">${card.rating}</p>
             </div>
           </div>
 
-          <table class="film-details__table">
-            <tr class="film-details__row">
-              <td class="film-details__term">Director</td>
-              <td class="film-details__cell">${director}</td>
-            </tr>
-            <tr class="film-details__row">
-              <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">${writers}</td>
-            </tr>
-            <tr class="film-details__row">
-              <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">${actors}</td>
-            </tr>
-            <tr class="film-details__row">
-              <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${year}</td>
-            </tr>
-            <tr class="film-details__row">
-              <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${duration}</td>
-            </tr>
-            <tr class="film-details__row">
-              <td class="film-details__term">Country</td>
-              <td class="film-details__cell">${country}</td>
-            </tr>
-            <tr class="film-details__row">
-              <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
-              <td class="film-details__cell">
-                ${genres.slice()
-                .map((genre) => {
-                  return createGenresTemplate(genre);
-                })
-                .join(`\n`)}
-              </td>
-            </tr>
-          </table>
+          ${createDetailsTableTemplate(details, card)}
 
           <p class="film-details__film-description">
-            ${description}
+            ${card.description}
           </p>
         </div>
       </div>
@@ -88,7 +102,7 @@ export const createFilmDetailsTemplate = (card) => {
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
     </div>
-    ${createContainerCommentsTemplate(comments, countComments)}
+    ${createContainerCommentsTemplate(card.comments, card.countComments)}
   </form>
 </section>`;
 };
