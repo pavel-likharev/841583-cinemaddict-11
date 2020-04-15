@@ -36,4 +36,4 @@ const generateComments = (count) => {
     .map(generateComment);
 };
 
-export {generateComments};
+export {generateComments, Emojis};

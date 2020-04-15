@@ -1,5 +1,5 @@
 const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
+  return min + Math.floor(Math.random() * (max));
 };
 
 const getRandomArrayItem = (array) => {
@@ -19,13 +19,26 @@ const formatTime = (date) => {
   return `${hours}:${minutes}`;
 };
 
-const removeElemenAfterKeydownEcs = (elem) => {
+const createEventListenerAfterKeydownEcs = (fn) => {
   document.addEventListener(`keydown`, function (evt) {
     if (evt.keyCode === 27) {
       evt.preventDefault();
-      elem.remove();
+      fn();
     }
   });
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, formatTime, removeElemenAfterKeydownEcs};
+const removeEventListenerAfterKeydownEcs = (fn) => {
+  document.addEventListener(`keydown`, function (evt) {
+    if (evt.keyCode === 27) {
+      evt.preventDefault();
+      fn();
+    }
+  });
+};
+
+const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+export {render, getRandomIntegerNumber, getRandomArrayItem, formatTime, createEventListenerAfterKeydownEcs, removeEventListenerAfterKeydownEcs};

@@ -1,6 +1,17 @@
 import {getRandomIntegerNumber, getRandomArrayItem} from '../utils.js';
 import {generateComments} from '../mock/comments.js';
 
+const MIN_COUNT_SENTENCES = 1;
+const MAX_COUNT_SENTENCES = 5;
+const MIN_COUNT_GENRES = 1;
+const MAX_COUNT_GENRES = 3;
+const MIN_COUNT_COMMENTS = 1;
+const MAX_COUNT_COMMENTS = 4;
+const MIN_AGE_RATING = 0;
+const MAX_AGE_RATING = 18;
+const MIN_FILM_RATING = 0;
+const MAX_FILM_RATING = 10;
+
 const TitleItems = [
   `The Dance of Life`,
   `Sagebrush Trail`,
@@ -26,10 +37,10 @@ const GenreItems = [
 ];
 
 const descriptionItem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`;
-const descriptions = descriptionItem.slice().split(`. `);
+const descriptions = descriptionItem.split(`. `);
 
 const getRandomSentencesFromDescription = () => {
-  const randomIndex = getRandomIntegerNumber(1, 5);
+  const randomIndex = getRandomIntegerNumber(MIN_COUNT_SENTENCES, MAX_COUNT_SENTENCES);
   const sentences = [];
 
   for (let i = 0; i < randomIndex; i++) {
@@ -39,7 +50,7 @@ const getRandomSentencesFromDescription = () => {
 };
 
 const getRandomGenres = () => {
-  const randomIndex = getRandomIntegerNumber(1, 4);
+  const randomIndex = getRandomIntegerNumber(MIN_COUNT_GENRES, MAX_COUNT_GENRES);
   const genres = [];
 
   for (let i = 0; i < randomIndex; i++) {
@@ -49,16 +60,17 @@ const getRandomGenres = () => {
   return genres;
 };
 
-const getRandomFilter = () => (getRandomIntegerNumber(1, 3) === 1) ? true : false;
+const generateRandomBoolean = () => Math.random() > 0.5;
 
 const generateFilmCard = () => {
   const randomGenres = getRandomGenres();
-  const count = getRandomIntegerNumber(0, 5);
+  const commentsCount = getRandomIntegerNumber(MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS);
+
   return {
     title: getRandomArrayItem(TitleItems),
-    age: getRandomIntegerNumber(0, 18) + `+`,
+    age: getRandomIntegerNumber(MIN_AGE_RATING, MAX_AGE_RATING) + `+`,
     poster: getRandomArrayItem(PosterItems),
-    rating: `3.2`,
+    rating: `${getRandomIntegerNumber(MIN_FILM_RATING, MAX_FILM_RATING) + getRandomIntegerNumber(MIN_FILM_RATING, MAX_FILM_RATING) / 10}`,
     director: `Tarantino`,
     writers: `Dicaprio`,
     actors: `Brad Pitt`,
@@ -68,11 +80,11 @@ const generateFilmCard = () => {
     genre: randomGenres[0],
     genres: randomGenres,
     description: getRandomSentencesFromDescription(),
-    countComments: count,
-    comments: generateComments(count),
-    watchList: getRandomFilter(),
-    history: getRandomFilter(),
-    favorites: getRandomFilter(),
+    countComments: commentsCount,
+    comments: generateComments(commentsCount),
+    watchList: generateRandomBoolean(),
+    history: generateRandomBoolean(),
+    favorites: generateRandomBoolean(),
   };
 };
 
