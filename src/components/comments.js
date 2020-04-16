@@ -1,4 +1,9 @@
-import {Emojis} from 'src/mock/comments.js';
+const emojis = [
+  {name: `sleeping`},
+  {name: `angry`},
+  {name: `smile`},
+  {name: `puke`},
+];
 
 const createCommentTemplate = (comment) => {
   return (
@@ -35,10 +40,10 @@ const createEmojiTemplate = (nameEmoji) => {
   );
 };
 
-const createListEmojisTemplate = (emojis) => {
+const createListEmojisTemplate = (listEmojis) => {
   return (
     `<div class="film-details__emoji-list">
-      ${emojis.map(createEmojiTemplate).join(`\n`)}
+      ${listEmojis.map((emoji) => createEmojiTemplate(emoji.name)).join(`\n`)}
     </div>`
   );
 };
@@ -58,7 +63,7 @@ export const createContainerCommentsTemplate = (comments, countComments) => {
           <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
         </label>
 
-        ${createListEmojisTemplate(Emojis)}
+        ${createListEmojisTemplate(emojis)}
 
       </div>
     </section>

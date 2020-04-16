@@ -1,4 +1,4 @@
-import {render, createEventListenerAfterKeydownEcs, removeEventListenerAfterKeydownEcs} from 'src/utils.js';
+import {render} from 'src/utils.js';
 import {createRankUserTemplate} from 'src/components/rank-user.js';
 import {createBaseFiltersTemplate} from 'src/components/base-filters.js';
 import {createFilmsContainerTemplate} from 'src/components/films-container.js';
@@ -12,6 +12,7 @@ import {createStaticticsTemplate} from 'src/components/statistic';
 
 const TOTAL_CARDS_COUNT = 17;
 const EXTRA_CARDS_COUNT = 2;
+const EXTRA_CARD_START_NUMBER = 0;
 
 const SHOWING_CARDS_COUNT_ON_START = 5;
 const SHOWING_CARDS_COUNT_BY_BUTTON = 5;
@@ -22,41 +23,57 @@ const SECOND_EXTRA_BOARD_NAME = `Most commented`;
 // function
 let cardsRenderedCount = 0;
 
-const renderCards = (containerElement, cards, cardsCount) => {
-  const from = cardsRenderedCount;
+
+const renderCards = (containerElement, cards, cardsCount, startNumber) => {
+  const from = startNumber;
   const to = from + cardsCount;
 
-  cards
-    .slice(from, to)
-    .forEach((card) => {
-      render(containerElement, createFilmCardTemplate(card), `beforeend`);
-      const cardElements = Array.from(document.querySelectorAll(`.film-card`));
-      cardElements[cardsRenderedCount].addEventListener(`click`, () => renderFilmDetailsPopup(card));
-      cardsRenderedCount++;
-    });
+  if (startNumber === cardsRenderedCount) {
+    cards
+      .slice(from, to)
+      .forEach((card) => {
+        render(containerElement, createFilmCardTemplate(card), `beforeend`);
+        const cardElements = Array.from(document.querySelectorAll(`.film-card`));
+        cardElements[cardsRenderedCount].addEventListener(`click`, () => renderFilmDetailsPopup(card));
+        cardsRenderedCount++;
+      });
+  } else if (startNumber === extraCardsRenderedCount) {
+    cards
+      .slice(from, to)
+      .forEach((card) => {
+        render(containerElement, createFilmCardTemplate(card), `beforeend`);
+        const cardElements = Array.from(document.querySelectorAll(`.film-card`));
+        cardElements[extraCardsRenderedCount].addEventListener(`click`, () => renderFilmDetailsPopup(card));
+        extraCardsRenderedCount++;
+      });
+    extraCardsRenderedCount = EXTRA_CARD_START_NUMBER;
+  }
 };
 
+const listenerPressButtonEsc = (evt) => {
+  if (evt.keyCode === 27) {
+    evt.preventDefault();
+    unrenderFilmDetailsPopup();
+  }
+};
 
 const renderFilmDetailsPopup = (card) => {
-  const filmsListElement = document.querySelector(`.films-list`);
-
-  render(filmsListElement, createFilmDetailsTemplate(card), `beforeend`);
-
+  render(siteBodyElement, createFilmDetailsTemplate(card), `beforeend`);
+  siteBodyElement.classList.add(`hide-overflow`);
   const filmDetailsElement = document.querySelector(`.film-details`);
   const filmDetailsCloseButton = filmDetailsElement.querySelector(`.film-details__close-btn`);
 
   filmDetailsCloseButton.addEventListener(`click`, () => unrenderFilmDetailsPopup());
-  createEventListenerAfterKeydownEcs(() => unrenderFilmDetailsPopup());
+  document.addEventListener(`keydown`, listenerPressButtonEsc);
 };
-
 
 const unrenderFilmDetailsPopup = () => {
   const filmDetailsElement = document.querySelector(`.film-details`);
-
   if (filmDetailsElement) {
     filmDetailsElement.remove();
+    document.removeEventListener(`keydown`, listenerPressButtonEsc);
+    siteBodyElement.classList.remove(`hide-overflow`);
   }
-  removeEventListenerAfterKeydownEcs(() => unrenderFilmDetailsPopup());
 };
 
 const renderFilmsContainerElement = () => {
@@ -64,27 +81,28 @@ const renderFilmsContainerElement = () => {
   const filmsListElement = document.querySelector(`.films-list`);
   const filmsContainerElement = document.querySelector(`.films-list__container`);
 
-  renderCards(filmsContainerElement, filmCards, SHOWING_CARDS_COUNT_ON_START);
+  renderCards(filmsContainerElement, filmCards, SHOWING_CARDS_COUNT_ON_START, cardsRenderedCount);
   render(filmsListElement, createShowMoreButtonTemplate(), `beforeend`);
 
   const filmsShowMoreButtonElement = filmsListElement.querySelector(`.films-list__show-more`);
   filmsShowMoreButtonElement.addEventListener(`click`, () => {
-    renderCards(filmsContainerElement, filmCards, SHOWING_CARDS_COUNT_BY_BUTTON);
+    renderCards(filmsContainerElement, filmCards, SHOWING_CARDS_COUNT_BY_BUTTON, cardsRenderedCount);
     if (cardsRenderedCount >= filmCards.length) {
       filmsShowMoreButtonElement.remove();
     }
   });
 };
 
+let extraCardsContainersRenderedCount = 0;
+let extraCardsRenderedCount = 0;
 const createExtraBoardFilmsElement = (nameBoard, cards) => {
-  const renderedCards = cards
-    .slice(0, EXTRA_CARDS_COUNT)
-    .map((card) => {
-      return createFilmCardTemplate(card);
-    }).join(``);
-  const globalFilmsContainer = document.querySelector(`.films`);
+  render(globalFilmsContainer, createExtraBoardFilmsTemplate(nameBoard), `beforeend`);
 
-  render(globalFilmsContainer, createExtraBoardFilmsTemplate(nameBoard, renderedCards), `beforeend`);
+  const extraBoardContainerElements = document.querySelectorAll(`.films-list--extra`);
+  const requiredBoardContainerElement = extraBoardContainerElements[extraCardsContainersRenderedCount].querySelector(`.films-list__container`);
+
+  renderCards(requiredBoardContainerElement, cards, EXTRA_CARDS_COUNT, extraCardsRenderedCount);
+  extraCardsContainersRenderedCount++;
 };
 
 // data
@@ -105,6 +123,7 @@ const filmsInFiltersCount = {
 
 // main code
 
+const siteBodyElement = document.querySelector(`body`);
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const statisticsElement = document.querySelector(`.footer__statistics`);
@@ -114,6 +133,8 @@ render(siteMainElement, createMainNavTemplate(filmsInFiltersCount), `beforeend`)
 render(siteMainElement, createBaseFiltersTemplate(), `beforeend`);
 
 renderFilmsContainerElement();
+
+const globalFilmsContainer = document.querySelector(`.films`);
 
 createExtraBoardFilmsElement(FIRST_EXTRA_BOARD_NAME, topRatedCards);
 createExtraBoardFilmsElement(SECOND_EXTRA_BOARD_NAME, topCommentsCards);
