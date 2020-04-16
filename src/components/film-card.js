@@ -2,7 +2,7 @@ const MAX_LENGTH_DESCRIPTION_ON_CARD = 140;
 
 export const createFilmCardTemplate = (card) => {
   const description = card.description.length >= MAX_LENGTH_DESCRIPTION_ON_CARD
-    ? card.description.slice(0, 140) + `...`
+    ? card.description.slice(0, MAX_LENGTH_DESCRIPTION_ON_CARD) + `...`
     : card.description;
 
   return (

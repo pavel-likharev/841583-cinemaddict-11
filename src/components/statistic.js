@@ -1,3 +1,3 @@
-export const createStaticticsTemplate = () => {
-  return `<p>17 movies inside</p>`;
+export const createStaticticsTemplate = (count = 0) => {
+  return `<p>${count} movies inside</p>`;
 };

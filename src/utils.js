@@ -19,8 +19,15 @@ const formatTime = (date) => {
   return `${hours}:${minutes}`;
 };
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
 };
 
-export {render, getRandomIntegerNumber, getRandomArrayItem, formatTime};
+const render = (container, element) => {
+  container.append(element);
+};
+
+export {render, getRandomIntegerNumber, getRandomArrayItem, formatTime, createElement};
