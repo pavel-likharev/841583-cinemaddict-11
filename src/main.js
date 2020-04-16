@@ -18,7 +18,8 @@ const CARDS_RENDER_STEP = 5;
 const BOARD_NAME_RATING = `Top rated`;
 const BOARD_NAME_COMMENTED = `Most commented`;
 
-// function
+const KEY_CODE_ESC = 27;
+
 const createCardsRenderer = (containerElement, cards, step) => {
   let counter = 0;
 
@@ -41,7 +42,7 @@ const createCardsRenderer = (containerElement, cards, step) => {
 };
 
 const handleDocumentKeydown = (evt) => {
-  if (evt.keyCode === 27) {
+  if (evt.keyCode === KEY_CODE_ESC) {
     evt.preventDefault();
     unrenderFilmDetailsPopup();
   }
@@ -99,8 +100,6 @@ const renderExtraBoardFilms = (containerElement, nameBoard, filmCards) => {
   cardsRenderer.render();
 };
 
-// data
-
 const filmCards = generateFilmCards(TOTAL_CARDS_COUNT);
 const topCommentsCards = filmCards.slice().sort((a, b) => b.countComments - a.countComments);
 const topRatedCards = filmCards.slice().sort((a, b) => b.rating - a.rating);
@@ -110,8 +109,6 @@ const filmsInFiltersCount = {
   history: filmCards.filter((filmCard) => filmCard.history).length,
   favorites: filmCards.filter((filmCard) => filmCard.favorites).length,
 };
-
-// main code
 
 const siteBodyElement = document.querySelector(`body`);
 const siteHeaderElement = document.querySelector(`.header`);
