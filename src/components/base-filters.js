@@ -1,4 +1,6 @@
-export const createBaseFiltersTemplate = () => {
+import {createElement} from "src/utils.js";
+
+const createBaseFiltersTemplate = () => {
   return (
     `<ul class="sort">
       <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
@@ -7,3 +9,25 @@ export const createBaseFiltersTemplate = () => {
     </ul>`
   );
 };
+
+export default class BaseFilters {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createBaseFiltersTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

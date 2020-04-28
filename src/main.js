@@ -1,15 +1,17 @@
-import {render, createElement} from 'src/utils.js';
-import {createRankUserTemplate} from 'src/components/rank-user.js';
-import {createBaseFiltersTemplate} from 'src/components/base-filters.js';
-import {createFilmsListTemplate} from 'src/components/films-list.js';
-import {createFilmsListExtraTemplate} from 'src/components/films-list-extra.js';
-import {createFilmsContainerTemplate} from 'src/components/films-container.js';
-import {createMainNavTemplate} from 'src/components/main-nav.js';
-import {createFilmCardTemplate} from 'src/components/film-card.js';
-import {createShowMoreButtonTemplate} from 'src/components/show-more-button.js';
+import {render, RenderPosition} from 'src/utils.js';
+import RankUserComponent from 'src/components/rank-user.js';
+import BaseFiltersComponent from 'src/components/base-filters.js';
+import FilmsListComponent from 'src/components/films-list.js';
+import FilmsListExtraComponent from 'src/components/films-list-extra.js';
+import FilmsContainerComponent from 'src/components/films-container.js';
+import MainNavigationComponent from 'src/components/main-nav.js';
+import FilmCardComponent from 'src/components/film-card.js';
+import ShowMoreButtonComponent from 'src/components/show-more-button.js';
+import FilmDetailsComponent from 'src/components/film-details.js';
+import FilmDetailsContainerComponent from 'src/components/film-details-container.js';
+import CommentsComponent from 'src/components/comments.js';
+import StatisticsComponent from 'src/components/statistic';
 import {generateFilmCards} from 'src/mock/film-card.js';
-import {createFilmDetailsTemplate} from 'src/components/film-details.js';
-import {createStaticticsTemplate} from 'src/components/statistic';
 
 const TOTAL_CARDS_COUNT = 17;
 const EXTRA_CARDS_COUNT = 2;
@@ -32,8 +34,8 @@ const createCardsRenderer = (containerElement, cards, step) => {
       cards
         .slice(from, to)
         .forEach((card) => {
-          const element = createElement(createFilmCardTemplate(card));
-          render(containerElement, element, `beforeend`);
+          const element = new FilmCardComponent(card).getElement();
+          render(containerElement, element, RenderPosition.BEFOREEND);
           element.addEventListener(`click`, () => renderFilmDetailsPopup(card));
           counter++;
         });
@@ -49,10 +51,16 @@ const handleDocumentKeydown = (evt) => {
 };
 
 const renderFilmDetailsPopup = (card) => {
-  const filmDetailsElement = createElement(createFilmDetailsTemplate(card));
-  const filmDetailsCloseButtonElement = filmDetailsElement.querySelector(`.film-details__close-btn`);
+  const filmDetailsContainerElement = new FilmDetailsContainerComponent().getElement();
+  const filmDetailsElement = new FilmDetailsComponent(card).getElement();
+  const commentsElement = new CommentsComponent(card).getElement();
 
-  render(siteBodyElement, filmDetailsElement, `beforeend`);
+  const filmDetailsCloseButtonElement = filmDetailsElement.querySelector(`.film-details__close-btn`);
+  const filmDetailsWrapperElement = filmDetailsContainerElement.querySelector(`.film-details__inner`);
+
+  render(siteBodyElement, filmDetailsContainerElement, RenderPosition.BEFOREEND);
+  render(filmDetailsWrapperElement, filmDetailsElement, RenderPosition.BEFOREEND);
+  render(filmDetailsWrapperElement, commentsElement, RenderPosition.BEFOREEND);
 
   siteBodyElement.classList.add(`hide-overflow`);
 
@@ -72,16 +80,16 @@ const unrenderFilmDetailsPopup = () => {
 };
 
 const renderBoardFilms = (containerElement) => {
-  const buttonElement = createElement(createShowMoreButtonTemplate());
-  const filmsListElement = createElement(createFilmsListTemplate());
+  const buttonElement = new ShowMoreButtonComponent().getElement();
+  const filmsListElement = new FilmsListComponent().getElement();
   const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
   const cardsRenderer = createCardsRenderer(filmsListContainerElement, filmCards, CARDS_RENDER_STEP);
 
   cardsRenderer.render();
 
-  render(filmsListElement, buttonElement, `beforeend`);
-  render(containerElement, filmsListElement, `beforeend`);
+  render(filmsListElement, buttonElement, RenderPosition.BEFOREEND);
+  render(containerElement, filmsListElement, RenderPosition.BEFOREEND);
 
   buttonElement.addEventListener(`click`, () => {
     cardsRenderer.render();
@@ -92,10 +100,10 @@ const renderBoardFilms = (containerElement) => {
 };
 
 const renderExtraBoardFilms = (containerElement, nameBoard, filmCards) => {
-  const extraBoardElement = createElement(createFilmsListExtraTemplate(nameBoard));
+  const extraBoardElement = new FilmsListExtraComponent(nameBoard).getElement();
   const filmsListContainerElement = extraBoardElement.querySelector(`.films-list__container`);
 
-  render(containerElement, extraBoardElement, `beforeend`);
+  render(containerElement, extraBoardElement, RenderPosition.BEFOREEND);
   const cardsRenderer = createCardsRenderer(filmsListContainerElement, filmCards, EXTRA_CARDS_COUNT);
   cardsRenderer.render();
 };
@@ -115,15 +123,15 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const statisticsElement = document.querySelector(`.footer__statistics`);
 
-render(siteHeaderElement, createElement(createRankUserTemplate()), `beforeend`);
-render(siteMainElement, createElement(createMainNavTemplate(filmsInFiltersCount)), `beforeend`);
-render(siteMainElement, createElement(createBaseFiltersTemplate()), `beforeend`);
+render(siteHeaderElement, new RankUserComponent().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new MainNavigationComponent(filmsInFiltersCount).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new BaseFiltersComponent().getElement(), RenderPosition.BEFOREEND);
 
-const filmsContainerElement = createElement(createFilmsContainerTemplate());
-render(siteMainElement, filmsContainerElement, `beforeend`);
+const filmsContainerElement = new FilmsContainerComponent().getElement();
+render(siteMainElement, filmsContainerElement, RenderPosition.BEFOREEND);
 
 renderBoardFilms(filmsContainerElement);
 renderExtraBoardFilms(filmsContainerElement, BOARD_NAME_RATING, topRatedCards);
 renderExtraBoardFilms(filmsContainerElement, BOARD_NAME_COMMENTED, topCommentsCards);
 
-render(statisticsElement, createElement(createStaticticsTemplate(TOTAL_CARDS_COUNT)), `beforeend`);
+render(statisticsElement, new StatisticsComponent(TOTAL_CARDS_COUNT).getElement(), RenderPosition.BEFOREEND);

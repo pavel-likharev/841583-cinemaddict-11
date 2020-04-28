@@ -1,4 +1,5 @@
-import {createContainerCommentsTemplate} from 'src/components/comments.js';
+import {createElement} from "src/utils.js";
+
 
 const createDetailTemplate = (term, cell) => {
   return (
@@ -31,7 +32,7 @@ const createDetailsTableTemplate = (details, card) => {
   );
 };
 
-export const createFilmDetailsTemplate = (card) => {
+const createFilmDetailsTemplate = (card) => {
   const details = [
     {
       title: `Director`,
@@ -58,53 +59,72 @@ export const createFilmDetailsTemplate = (card) => {
       value: card.country
     },
   ];
+
   return (
-    `<section class="film-details">
-      <form class="film-details__inner" action="" method="get">
-        <div class="form-details__top-container">
-          <div class="film-details__close">
-            <button class="film-details__close-btn" type="button">close</button>
-          </div>
-          <div class="film-details__info-wrap">
-            <div class="film-details__poster">
-              <img class="film-details__poster-img" src="${card.poster}" alt="">
+    `<div class="form-details__top-container">
+      <div class="film-details__close">
+        <button class="film-details__close-btn" type="button">close</button>
+      </div>
+      <div class="film-details__info-wrap">
+        <div class="film-details__poster">
+          <img class="film-details__poster-img" src="${card.poster}" alt="">
 
-              <p class="film-details__age">${card.age}</p>
-            </div>
-
-            <div class="film-details__info">
-              <div class="film-details__info-head">
-                <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">${card.title}</h3>
-                  <p class="film-details__title-original">Original: ${card.title}</p>
-                </div>
-
-                <div class="film-details__rating">
-                  <p class="film-details__total-rating">${card.rating}</p>
-                </div>
-              </div>
-
-              ${createDetailsTableTemplate(details, card)}
-
-              <p class="film-details__film-description">
-                ${card.description}
-              </p>
-            </div>
-          </div>
-
-          <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-            <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-            <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-            <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
-          </section>
+          <p class="film-details__age">${card.age}</p>
         </div>
-        ${createContainerCommentsTemplate(card.comments, card.countComments)}
-      </form>
-    </section>`
+
+        <div class="film-details__info">
+          <div class="film-details__info-head">
+            <div class="film-details__title-wrap">
+              <h3 class="film-details__title">${card.title}</h3>
+              <p class="film-details__title-original">Original: ${card.title}</p>
+            </div>
+
+            <div class="film-details__rating">
+              <p class="film-details__total-rating">${card.rating}</p>
+            </div>
+          </div>
+
+          ${createDetailsTableTemplate(details, card)}
+
+          <p class="film-details__film-description">
+            ${card.description}
+          </p>
+        </div>
+      </div>
+
+      <section class="film-details__controls">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+      </section>
+    </div>`
   );
 };
+
+export default class FilmDetails {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
