@@ -1,6 +1,8 @@
+import {createElement} from "src/utils.js";
+
 const MAX_LENGTH_DESCRIPTION_ON_CARD = 140;
 
-export const createFilmCardTemplate = (card) => {
+const createFilmCardTemplate = (card) => {
   const description = card.description.length >= MAX_LENGTH_DESCRIPTION_ON_CARD
     ? card.description.slice(0, MAX_LENGTH_DESCRIPTION_ON_CARD) + `...`
     : card.description;
@@ -25,3 +27,26 @@ export const createFilmCardTemplate = (card) => {
     </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

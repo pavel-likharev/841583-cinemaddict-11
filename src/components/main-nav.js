@@ -1,4 +1,6 @@
-export const createMainNavTemplate = (filmsCount) => {
+import {createElement} from "src/utils.js";
+
+const createMainNavigationTemplate = (filmsCount) => {
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
@@ -11,3 +13,26 @@ export const createMainNavTemplate = (filmsCount) => {
     </nav>`
   );
 };
+
+export default class MainNavigation {
+  constructor(filmsCount) {
+    this._filmsCount = filmsCount;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMainNavigationTemplate(this._filmsCount);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

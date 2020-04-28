@@ -1,3 +1,5 @@
+import {createElement} from "src/utils.js";
+
 const emojis = [
   {name: `sleeping`},
   {name: `angry`},
@@ -48,13 +50,13 @@ const createListEmojisTemplate = (listEmojis) => {
   );
 };
 
-export const createContainerCommentsTemplate = (comments, countComments) => {
+const createCommentsTemplate = (card) => {
   return (
     `<div class="form-details__bottom-container">
     <section class="film-details__comments-wrap">
-      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${countComments}</span></h3>
+      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${card.countComments}</span></h3>
 
-      ${createListCommentsTemplate(comments)}
+      ${createListCommentsTemplate(card.comments)}
 
       <div class="film-details__new-comment">
         <div for="add-emoji" class="film-details__add-emoji-label"></div>
@@ -70,3 +72,26 @@ export const createContainerCommentsTemplate = (comments, countComments) => {
   </div>`
   );
 };
+
+export default class Comments {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createCommentsTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
