@@ -1,5 +1,5 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from '../utils.js';
-import {generateComments} from '../mock/comments.js';
+import {getRandomIntegerNumber, getRandomArrayItem} from 'src/utils/common.js';
+import {generateComments} from 'src/mock/comments.js';
 
 const MIN_COUNT_SENTENCES = 1;
 const MAX_COUNT_SENTENCES = 5;
@@ -35,6 +35,15 @@ const GenreItems = [
   `Action`,
   `Horror`,
 ];
+
+const YearsItems = [
+  `1982`,
+  `1970`,
+  `1980`,
+  `1969`,
+  `1957`,
+];
+
 
 const descriptionItem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`;
 const descriptions = descriptionItem.split(`. `);
@@ -75,7 +84,7 @@ const generateFilmCard = () => {
     writers: `Dicaprio`,
     actors: `Brad Pitt`,
     country: `USA`,
-    year: `1982`,
+    year: getRandomArrayItem(YearsItems),
     duration: `92m`,
     genre: randomGenres[0],
     genres: randomGenres,
