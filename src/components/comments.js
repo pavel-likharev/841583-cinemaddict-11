@@ -1,4 +1,4 @@
-import {createElement} from "src/utils.js";
+import AbstractComponent from 'src/components/abstract-component.js';
 
 const emojis = [
   {name: `sleeping`},
@@ -73,25 +73,14 @@ const createCommentsTemplate = (card) => {
   );
 };
 
-export default class Comments {
+export default class Comments extends AbstractComponent {
   constructor(card) {
+    super();
+
     this._card = card;
-    this._element = null;
   }
 
   getTemplate() {
     return createCommentsTemplate(this._card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

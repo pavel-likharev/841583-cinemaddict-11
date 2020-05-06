@@ -1,4 +1,4 @@
-import {createElement} from "src/utils.js";
+import AbstractComponent from 'src/components/abstract-component.js';
 
 const MAX_LENGTH_DESCRIPTION_ON_CARD = 140;
 
@@ -28,25 +28,25 @@ const createFilmCardTemplate = (card) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(card) {
+    super();
+
     this._card = card;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setKitElementsClickHandler(handler) {
+    const kitElements = [
+      this.getElement().querySelector(`.film-card__poster`),
+      this.getElement().querySelector(`.film-card__title`),
+      this.getElement().querySelector(`.film-card__comments`)
+    ];
+    kitElements.forEach((element) => {
+      element.addEventListener(`click`, handler);
+    });
   }
 }
