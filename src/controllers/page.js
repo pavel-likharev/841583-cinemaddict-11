@@ -1,70 +1,21 @@
 import {render, RenderPosition, remove} from 'src/utils/render.js';
 import FilmsListComponent from 'src/components/films-list.js';
 import FilmsListExtraComponent from 'src/components/films-list-extra.js';
-import FilmCardComponent from 'src/components/film-card.js';
 import ShowMoreButtonComponent from 'src/components/show-more-button.js';
 import BaseFiltersComponent, {SortType} from 'src/components/base-filters.js';
-import FilmDetailsComponent from 'src/components/film-details.js';
-import FilmDetailsContainerComponent from 'src/components/film-details-container.js';
-import CommentsComponent from 'src/components/comments.js';
+import MovieController from 'src/controllers/movie.js';
 
 const EXTRA_CARDS_COUNT = 2;
 const CARDS_RENDER_STEP = 5;
 const CARDS_RENDER_ON_START = 5;
 
-const KEY_CODE_ESC = 27;
-
-const renderFilmCard = (cardListElement, card) => {
-  const onEscKeyDown = (evt) => {
-    if (evt.keyCode === KEY_CODE_ESC) {
-      evt.preventDefault();
-      unrenderFilmDetailsPopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  const renderFilmDetailsPopup = () => {
-    unrenderFilmDetailsPopup();
-
-    const filmDetailsWrapperElement = filmDetailsContainerComponent.getElement().querySelector(`.film-details__inner`);
-
-    render(siteBodyElement, filmDetailsContainerComponent, RenderPosition.BEFOREEND);
-    render(filmDetailsWrapperElement, filmDetailsComponent, RenderPosition.BEFOREEND);
-    render(filmDetailsWrapperElement, commentsComponent, RenderPosition.BEFOREEND);
-
-    siteBodyElement.classList.add(`hide-overflow`);
-  };
-
-  const unrenderFilmDetailsPopup = () => {
-    const filmDetailsElement = document.querySelector(`.film-details`);
-    if (filmDetailsElement) {
-      filmDetailsElement.remove();
-      siteBodyElement.classList.remove(`hide-overflow`);
-    }
-  };
-
-  const siteBodyElement = document.querySelector(`body`);
-  const filmCardComponent = new FilmCardComponent(card);
-  const filmDetailsContainerComponent = new FilmDetailsContainerComponent();
-  const filmDetailsComponent = new FilmDetailsComponent(card);
-  const commentsComponent = new CommentsComponent(card);
-
-  filmCardComponent.setKitElementsClickHandler(() => {
-    renderFilmDetailsPopup(card);
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-
-  filmDetailsComponent.setCloseButtonClickHandler(() => {
-    unrenderFilmDetailsPopup();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  });
-
-  render(cardListElement, filmCardComponent, RenderPosition.BEFOREEND);
-};
-
 const renderFilmCards = (filmListElement, filmCards) => {
   filmCards.forEach((filmCard) => {
-    renderFilmCard(filmListElement, filmCard);
+    const movieController = new MovieController(filmListElement);
+
+    movieController.render(filmCard);
+
+    return movieController;
   });
 };
 
