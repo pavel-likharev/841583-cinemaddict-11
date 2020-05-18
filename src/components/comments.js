@@ -1,4 +1,4 @@
-import AbstractComponent from 'src/components/abstract-component.js';
+import AbstractSmartComponent from 'src/components/abstract-smart-component.js';
 
 const emojis = [
   {name: `sleeping`},
@@ -42,6 +42,15 @@ const createEmojiTemplate = (nameEmoji) => {
   );
 };
 
+const createImageEmojiTemplate = (emoji) => {
+  if (!emoji) {
+    return ``;
+  }
+  return (
+    `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`
+  );
+};
+
 const createListEmojisTemplate = (listEmojis) => {
   return (
     `<div class="film-details__emoji-list">
@@ -50,7 +59,7 @@ const createListEmojisTemplate = (listEmojis) => {
   );
 };
 
-const createCommentsTemplate = (card) => {
+const createCommentsTemplate = (card, currentEmoji) => {
   return (
     `<div class="form-details__bottom-container">
     <section class="film-details__comments-wrap">
@@ -59,7 +68,7 @@ const createCommentsTemplate = (card) => {
       ${createListCommentsTemplate(card.comments)}
 
       <div class="film-details__new-comment">
-        <div for="add-emoji" class="film-details__add-emoji-label"></div>
+        <div for="add-emoji" class="film-details__add-emoji-label">${createImageEmojiTemplate(currentEmoji)}</div>
 
         <label class="film-details__comment-label">
           <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -73,14 +82,35 @@ const createCommentsTemplate = (card) => {
   );
 };
 
-export default class Comments extends AbstractComponent {
+export default class Comments extends AbstractSmartComponent {
   constructor(card) {
     super();
 
     this._card = card;
+
+    this._currentEmoji = null;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createCommentsTemplate(this._card);
+    return createCommentsTemplate(this._card, this._currentEmoji);
+  }
+
+  recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    const listEmojis = Array.from(element.querySelectorAll(`.film-details__emoji-item`));
+
+    listEmojis.forEach((emoji) => {
+      emoji.addEventListener(`click`, () => {
+        this._currentEmoji = emoji.value;
+        this.rerender();
+      });
+    });
   }
 }
