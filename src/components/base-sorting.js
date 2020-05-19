@@ -6,7 +6,7 @@ export const SortType = {
   DEFAULT: `default`,
 };
 
-const createBaseFiltersTemplate = () => {
+const createBaseSortingTemplate = () => {
   return (
     `<ul class="sort">
       <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
@@ -16,7 +16,7 @@ const createBaseFiltersTemplate = () => {
   );
 };
 
-export default class BaseFilters extends AbstractComponent {
+export default class BaseSorting extends AbstractComponent {
   constructor() {
     super();
 
@@ -24,7 +24,7 @@ export default class BaseFilters extends AbstractComponent {
   }
 
   getTemplate() {
-    return createBaseFiltersTemplate();
+    return createBaseSortingTemplate();
   }
 
   getSortType() {
