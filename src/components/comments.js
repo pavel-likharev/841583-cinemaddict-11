@@ -101,6 +101,10 @@ export default class Comments extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
+  rerender() {
+    super.rerender();
+  }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
