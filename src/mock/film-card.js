@@ -36,15 +36,6 @@ const GenreItems = [
   `Horror`,
 ];
 
-const YearsItems = [
-  `1982`,
-  `1970`,
-  `1980`,
-  `1969`,
-  `1957`,
-];
-
-
 const descriptionItem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`;
 const descriptions = descriptionItem.split(`. `);
 
@@ -69,11 +60,21 @@ const getRandomGenres = () => {
   return genres;
 };
 
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const diffValueYear = getRandomIntegerNumber(40, 60);
+
+  targetDate.setYear(targetDate.getYear() - diffValueYear);
+  return targetDate;
+};
+
 const generateRandomBoolean = () => Math.random() > 0.5;
 
 const generateFilmCard = () => {
   const randomGenres = getRandomGenres();
   const commentsCount = getRandomIntegerNumber(MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS);
+  const year = getRandomDate();
+  const duration = getRandomDate();
 
   return {
     title: getRandomArrayItem(TitleItems),
@@ -84,8 +85,8 @@ const generateFilmCard = () => {
     writers: `Dicaprio`,
     actors: `Brad Pitt`,
     country: `USA`,
-    year: getRandomArrayItem(YearsItems),
-    duration: `92m`,
+    year,
+    duration,
     genre: randomGenres[0],
     genres: randomGenres,
     description: getRandomSentencesFromDescription(),
