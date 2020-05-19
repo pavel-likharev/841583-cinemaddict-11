@@ -1,4 +1,5 @@
 import AbstractComponent from 'src/components/abstract-component.js';
+import {formatTime, formatDate} from "src/utils/common.js";
 
 const MAX_LENGTH_DESCRIPTION_ON_CARD = 140;
 
@@ -6,14 +7,16 @@ const createFilmCardTemplate = (card) => {
   const description = card.description.length >= MAX_LENGTH_DESCRIPTION_ON_CARD
     ? card.description.slice(0, MAX_LENGTH_DESCRIPTION_ON_CARD) + `...`
     : card.description;
+  const year = formatDate(card.year);
+  const duration = formatTime(card.duration);
 
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${card.title}</h3>
       <p class="film-card__rating">${card.rating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${card.year}</span>
-        <span class="film-card__duration">${card.duration}</span>
+        <span class="film-card__year">${year}</span>
+        <span class="film-card__duration">${duration}</span>
         <span class="film-card__genre">${card.genre}</span>
       </p>
       <img src="${card.poster}" alt="" class="film-card__poster">

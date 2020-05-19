@@ -1,4 +1,5 @@
 import AbstractComponent from 'src/components/abstract-component.js';
+import {formatTime, formatDate} from "src/utils/common.js";
 
 
 const createDetailTemplate = (term, cell) => {
@@ -19,7 +20,7 @@ const createDetailsTableTemplate = (details, card) => {
     `<table class="film-details__table">
       ${details
         .map((detail) => {
-          createDetailTemplate(detail.title, detail.value);
+          return createDetailTemplate(detail.title, detail.value);
         })
         .join(`\n`)}
       <tr class="film-details__row">
@@ -33,6 +34,9 @@ const createDetailsTableTemplate = (details, card) => {
 };
 
 const createFilmDetailsTemplate = (card) => {
+  const year = formatDate(card.year);
+  const duration = formatTime(card.duration);
+
   const details = [
     {
       title: `Director`,
@@ -48,11 +52,11 @@ const createFilmDetailsTemplate = (card) => {
     },
     {
       title: `Release date`,
-      value: card.year
+      value: year
     },
     {
       title: `Runtime`,
-      value: card.duration
+      value: duration
     },
     {
       title: `Country`,
@@ -85,7 +89,7 @@ const createFilmDetailsTemplate = (card) => {
           </div>
 
           ${createDetailsTableTemplate(details, card)}
-
+          
           <p class="film-details__film-description">
             ${card.description}
           </p>
