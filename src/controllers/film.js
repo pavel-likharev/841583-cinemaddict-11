@@ -1,12 +1,12 @@
 import {render, RenderPosition, replace} from 'src/utils/render.js';
-import FilmCardComponent from 'src/components/film-card.js';
+import FilmComponent from 'src/components/film.js';
 import FilmDetailsComponent from 'src/components/film-details.js';
 import FilmDetailsContainerComponent from 'src/components/film-details-container.js';
 import CommentsComponent from 'src/components/comments.js';
 
 const KEY_CODE_ESC = 27;
 
-export default class MovieController {
+export default class FilmController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
@@ -21,7 +21,7 @@ export default class MovieController {
   render(card) {
     const oldFilmCardComponent = this._filmCardComponent;
 
-    this._filmCardComponent = new FilmCardComponent(card);
+    this._filmCardComponent = new FilmComponent(card);
     this._filmDetailsContainerComponent = new FilmDetailsContainerComponent();
     this._filmDetailsComponent = new FilmDetailsComponent(card);
     this._commentsComponent = new CommentsComponent(card);
