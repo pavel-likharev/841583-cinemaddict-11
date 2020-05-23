@@ -5,18 +5,18 @@ import FilterController from 'src/controllers/filter.js';
 import StatisticsComponent from 'src/components/statistic';
 import PageController from 'src/controllers/page.js';
 import FilmsModel from "src/models/films.js";
-import {generateFilmCards} from 'src/mock/film.js';
+import {generateFilms} from 'src/mock/film.js';
 
-const TOTAL_CARDS_COUNT = 17;
+const TOTAL_FILMS_COUNT = 17;
 const BOARD_NAME_RATING = `Top rated`;
 const BOARD_NAME_COMMENTED = `Most commented`;
 
-const filmCards = generateFilmCards(TOTAL_CARDS_COUNT);
+const films = generateFilms(TOTAL_FILMS_COUNT);
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(filmCards);
+filmsModel.setFilms(films);
 
-const topCommentsCards = filmCards.slice().sort((a, b) => b.countComments - a.countComments);
-const topRatedCards = filmCards.slice().sort((a, b) => b.rating - a.rating);
+const topCommentsFilms = films.slice().sort((a, b) => b.countComments - a.countComments);
+const topRatedFilms = films.slice().sort((a, b) => b.rating - a.rating);
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
@@ -34,7 +34,7 @@ pageController.renderBoard();
 const filterController = new FilterController(siteMainElement, filmsModel);
 filterController.render();
 
-pageController.renderExtraBoard(BOARD_NAME_RATING, topRatedCards);
-pageController.renderExtraBoard(BOARD_NAME_COMMENTED, topCommentsCards);
+pageController.renderExtraBoard(BOARD_NAME_RATING, topRatedFilms);
+pageController.renderExtraBoard(BOARD_NAME_COMMENTED, topCommentsFilms);
 
-render(statisticsElement, new StatisticsComponent(TOTAL_CARDS_COUNT), RenderPosition.BEFOREEND);
+render(statisticsElement, new StatisticsComponent(TOTAL_FILMS_COUNT), RenderPosition.BEFOREEND);

@@ -59,13 +59,13 @@ const createListEmojisTemplate = (listEmojis) => {
   );
 };
 
-const createCommentsTemplate = (card, currentEmoji) => {
+const createCommentsTemplate = (film, currentEmoji) => {
   return (
     `<div class="form-details__bottom-container">
     <section class="film-details__comments-wrap">
-      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${card.countComments}</span></h3>
+      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.countComments}</span></h3>
 
-      ${createListCommentsTemplate(card.comments)}
+      ${createListCommentsTemplate(film.comments)}
 
       <div class="film-details__new-comment">
         <div for="add-emoji" class="film-details__add-emoji-label">${createImageEmojiTemplate(currentEmoji)}</div>
@@ -83,10 +83,10 @@ const createCommentsTemplate = (card, currentEmoji) => {
 };
 
 export default class Comments extends AbstractSmartComponent {
-  constructor(card) {
+  constructor(film) {
     super();
 
-    this._card = card;
+    this._film = film;
 
     this._currentEmoji = null;
 
@@ -94,7 +94,7 @@ export default class Comments extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createCommentsTemplate(this._card, this._currentEmoji);
+    return createCommentsTemplate(this._film, this._currentEmoji);
   }
 
   recoveryListeners() {

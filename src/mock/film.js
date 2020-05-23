@@ -70,7 +70,7 @@ const getRandomDate = () => {
 
 const generateRandomBoolean = () => Math.random() > 0.5;
 
-const generateFilmCard = () => {
+const generateFilm = () => {
   const randomGenres = getRandomGenres();
   const commentsCount = getRandomIntegerNumber(MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS);
   const year = getRandomDate();
@@ -98,11 +98,11 @@ const generateFilmCard = () => {
   };
 };
 
-const generateFilmCards = (count) => {
+const generateFilms = (count) => {
   return new Array(count)
     .fill(``)
-    .map(generateFilmCard);
+    .map(generateFilm);
 };
 
 
-export {generateFilmCards};
+export {generateFilms};

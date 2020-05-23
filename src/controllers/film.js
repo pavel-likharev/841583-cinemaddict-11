@@ -12,40 +12,40 @@ export default class FilmController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
 
-    this._filmCardComponent = null;
+    this._filmComponent = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._siteBodyElement = document.querySelector(`body`);
   }
 
-  render(card) {
-    const oldFilmCardComponent = this._filmCardComponent;
+  render(film) {
+    const oldFilmComponent = this._filmComponent;
 
-    this._filmCardComponent = new FilmComponent(card);
+    this._filmComponent = new FilmComponent(film);
     this._filmDetailsContainerComponent = new FilmDetailsContainerComponent();
-    this._filmDetailsComponent = new FilmDetailsComponent(card);
-    this._commentsComponent = new CommentsComponent(card);
+    this._filmDetailsComponent = new FilmDetailsComponent(film);
+    this._commentsComponent = new CommentsComponent(film);
 
-    this._filmCardComponent.setKitElementsClickHandler(() => {
-      this._renderFilmDetailsPopup(card);
+    this._filmComponent.setKitElementsClickHandler(() => {
+      this._renderFilmDetailsPopup(film);
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    this._filmCardComponent.setWatchlistButtonClickHandler(() => {
-      this._onDataChange(this, card, Object.assign({}, card, {
-        isWatchlist: !card.isWatchlist,
+    this._filmComponent.setWatchlistButtonClickHandler(() => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatchlist: !film.isWatchlist,
       }));
     });
 
-    this._filmCardComponent.setWatchedButtonClickHandler(() => {
-      this._onDataChange(this, card, Object.assign({}, card, {
-        isHistory: !card.isHistory,
+    this._filmComponent.setWatchedButtonClickHandler(() => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isHistory: !film.isHistory,
       }));
     });
 
-    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(this, card, Object.assign({}, card, {
-        isFavorite: !card.isFavorite,
+    this._filmComponent.setFavoriteButtonClickHandler(() => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite,
       }));
     });
 
@@ -54,15 +54,15 @@ export default class FilmController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    if (oldFilmCardComponent) {
-      replace(this._filmCardComponent, oldFilmCardComponent);
+    if (oldFilmComponent) {
+      replace(this._filmComponent, oldFilmComponent);
     } else {
-      render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
     }
   }
 
   destroy() {
-    remove(this._filmCardComponent);
+    remove(this._filmComponent);
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }

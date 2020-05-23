@@ -15,7 +15,7 @@ const createGenresTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
 
-const createDetailsTableTemplate = (details, card) => {
+const createDetailsTableTemplate = (details, film) => {
   return (
     `<table class="film-details__table">
       ${details
@@ -24,31 +24,31 @@ const createDetailsTableTemplate = (details, card) => {
         })
         .join(`\n`)}
       <tr class="film-details__row">
-        <td class="film-details__term">${card.genres.length > 1 ? `Genres` : `Genre`}</td>
+        <td class="film-details__term">${film.genres.length > 1 ? `Genres` : `Genre`}</td>
         <td class="film-details__cell">
-          ${card.genres.map(createGenresTemplate).join(`\n`)}
+          ${film.genres.map(createGenresTemplate).join(`\n`)}
         </td>
       </tr>
     </table>`
   );
 };
 
-const createFilmDetailsTemplate = (card) => {
-  const year = formatDate(card.year);
-  const duration = formatTime(card.duration);
+const createFilmDetailsTemplate = (film) => {
+  const year = formatDate(film.year);
+  const duration = formatTime(film.duration);
 
   const details = [
     {
       title: `Director`,
-      value: card.director
+      value: film.director
     },
     {
       title: `Writers`,
-      value: card.writers
+      value: film.writers
     },
     {
       title: `Actors`,
-      value: card.actors
+      value: film.actors
     },
     {
       title: `Release date`,
@@ -60,7 +60,7 @@ const createFilmDetailsTemplate = (card) => {
     },
     {
       title: `Country`,
-      value: card.country
+      value: film.country
     },
   ];
 
@@ -71,27 +71,27 @@ const createFilmDetailsTemplate = (card) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="${card.poster}" alt="">
+          <img class="film-details__poster-img" src="${film.poster}" alt="">
 
-          <p class="film-details__age">${card.age}</p>
+          <p class="film-details__age">${film.age}</p>
         </div>
 
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
-              <h3 class="film-details__title">${card.title}</h3>
-              <p class="film-details__title-original">Original: ${card.title}</p>
+              <h3 class="film-details__title">${film.title}</h3>
+              <p class="film-details__title-original">Original: ${film.title}</p>
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${card.rating}</p>
+              <p class="film-details__total-rating">${film.rating}</p>
             </div>
           </div>
 
-          ${createDetailsTableTemplate(details, card)}
+          ${createDetailsTableTemplate(details, film)}
           
           <p class="film-details__film-description">
-            ${card.description}
+            ${film.description}
           </p>
         </div>
       </div>
@@ -111,14 +111,14 @@ const createFilmDetailsTemplate = (card) => {
 };
 
 export default class FilmDetails extends AbstractComponent {
-  constructor(card) {
+  constructor(film) {
     super();
 
-    this._card = card;
+    this._film = film;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._card);
+    return createFilmDetailsTemplate(this._film);
   }
 
   setCloseButtonClickHandler(handler) {

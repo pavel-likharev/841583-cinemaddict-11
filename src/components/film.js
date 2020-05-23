@@ -1,45 +1,45 @@
 import AbstractComponent from 'src/components/abstract-component.js';
 import {formatTime, formatDate} from "src/utils/common.js";
 
-const MAX_LENGTH_DESCRIPTION_ON_CARD = 140;
+const MAX_LENGTH_DESCRIPTION_ON_FILM_CARD = 140;
 
-const createFilmCardTemplate = (card) => {
-  const description = card.description.length >= MAX_LENGTH_DESCRIPTION_ON_CARD
-    ? card.description.slice(0, MAX_LENGTH_DESCRIPTION_ON_CARD) + `...`
-    : card.description;
-  const year = formatDate(card.year);
-  const duration = formatTime(card.duration);
+const createFilmTemplate = (film) => {
+  const description = film.description.length >= MAX_LENGTH_DESCRIPTION_ON_FILM_CARD
+    ? film.description.slice(0, MAX_LENGTH_DESCRIPTION_ON_FILM_CARD) + `...`
+    : film.description;
+  const year = formatDate(film.year);
+  const duration = formatTime(film.duration);
 
   return (
     `<article class="film-card">
-      <h3 class="film-card__title">${card.title}</h3>
-      <p class="film-card__rating">${card.rating}</p>
+      <h3 class="film-card__title">${film.title}</h3>
+      <p class="film-card__rating">${film.rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${year}</span>
         <span class="film-card__duration">${duration}</span>
-        <span class="film-card__genre">${card.genre}</span>
+        <span class="film-card__genre">${film.genre}</span>
       </p>
-      <img src="${card.poster}" alt="" class="film-card__poster">
+      <img src="${film.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${description}</p>
-      <a class="film-card__comments">${card.countComments} comments</a>
+      <a class="film-card__comments">${film.countComments} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${card.watchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${card.history ? `film-card__controls-item--active` : ``}">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite ${card.favorites ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${film.isWatchlist ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${film.isHistory ? `film-card__controls-item--active` : ``}">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite ${film.isFavorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
       </form>
     </article>`
   );
 };
 
 export default class Film extends AbstractComponent {
-  constructor(card) {
+  constructor(film) {
     super();
 
-    this._card = card;
+    this._film = film;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._card);
+    return createFilmTemplate(this._film);
   }
 
   setKitElementsClickHandler(handler) {
