@@ -92,9 +92,9 @@ const generateFilmCard = () => {
     description: getRandomSentencesFromDescription(),
     countComments: commentsCount,
     comments: generateComments(commentsCount),
-    watchList: generateRandomBoolean(),
-    history: generateRandomBoolean(),
-    favorites: generateRandomBoolean(),
+    isWatchlist: generateRandomBoolean(),
+    isHistory: generateRandomBoolean(),
+    isFavorite: generateRandomBoolean(),
   };
 };
 

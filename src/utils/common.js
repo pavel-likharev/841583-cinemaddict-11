@@ -18,4 +18,16 @@ const formatDate = (date) => {
   return moment(date).format(`YYYY`);
 };
 
+// const isWatchlist = (watchlist) => {
+//   return Object.values(watchlist).some(Boolean);
+// };
+
+// const isHistory = (history) => {
+//   return Object.values(history).some(Boolean);
+// };
+
+// const isFavorite = (favorite) => {
+//   return Object.values(favorite).some(Boolean);
+// };
+
 export {getRandomIntegerNumber, getRandomArrayItem, formatTime, formatDate};

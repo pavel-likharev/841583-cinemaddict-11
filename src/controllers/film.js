@@ -1,4 +1,4 @@
-import {render, RenderPosition, replace} from 'src/utils/render.js';
+import {render, RenderPosition, replace, remove} from 'src/utils/render.js';
 import FilmComponent from 'src/components/film.js';
 import FilmDetailsComponent from 'src/components/film-details.js';
 import FilmDetailsContainerComponent from 'src/components/film-details-container.js';
@@ -31,33 +31,45 @@ export default class FilmController {
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    this._filmDetailsComponent.setCloseButtonClickHandler(() => {
-      this._unrenderFilmDetailsPopup();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    });
-
     this._filmCardComponent.setWatchlistButtonClickHandler(() => {
       this._onDataChange(this, card, Object.assign({}, card, {
-        watchList: !card.watchList,
+        isWatchlist: !card.isWatchlist,
       }));
     });
 
     this._filmCardComponent.setWatchedButtonClickHandler(() => {
       this._onDataChange(this, card, Object.assign({}, card, {
-        history: !card.history,
+        isHistory: !card.isHistory,
       }));
     });
 
     this._filmCardComponent.setFavoriteButtonClickHandler(() => {
       this._onDataChange(this, card, Object.assign({}, card, {
-        favorites: !card.favorites,
+        isFavorite: !card.isFavorite,
       }));
+    });
+
+    this._filmDetailsComponent.setCloseButtonClickHandler(() => {
+      this._unrenderFilmDetailsPopup();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
     if (oldFilmCardComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    }
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  setDefaultView() {
+    if (this._filmDetailsContainerComponent.getElement()) {
+      this._unrenderFilmDetailsPopup();
     }
   }
 
@@ -74,13 +86,10 @@ export default class FilmController {
 
   _unrenderFilmDetailsPopup() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._filmDetailsContainerComponent.getElement().remove();
-    this._siteBodyElement.classList.remove(`hide-overflow`);
-  }
 
-  setDefaultView() {
-    if (this._filmDetailsContainerComponent.getElement()) {
-      this._unrenderFilmDetailsPopup();
+    if (document.contains(this._filmDetailsContainerComponent.getElement())) {
+      this._filmDetailsContainerComponent.getElement().remove();
+      this._siteBodyElement.classList.remove(`hide-overflow`);
     }
   }
 
