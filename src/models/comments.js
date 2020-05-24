@@ -10,7 +10,7 @@ export default class Comments {
   }
 
   setComments(comments) {
-    this._movies = Array.from(comments);
+    this._comments = Array.from(comments);
     this._callHandlers(this._dataChangeHandlers);
   }
 

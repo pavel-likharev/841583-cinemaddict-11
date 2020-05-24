@@ -3,7 +3,7 @@ import {formatTime, formatDate} from "src/utils/common.js";
 
 const MAX_LENGTH_DESCRIPTION_ON_FILM_CARD = 140;
 
-const createFilmTemplate = (film) => {
+const createFilmTemplate = (film, countComments) => {
   const description = film.description.length >= MAX_LENGTH_DESCRIPTION_ON_FILM_CARD
     ? film.description.slice(0, MAX_LENGTH_DESCRIPTION_ON_FILM_CARD) + `...`
     : film.description;
@@ -21,7 +21,7 @@ const createFilmTemplate = (film) => {
       </p>
       <img src="${film.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${description}</p>
-      <a class="film-card__comments">${film.countComments} comments</a>
+      <a class="film-card__comments">${countComments} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${film.isWatchlist ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
         <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${film.isHistory ? `film-card__controls-item--active` : ``}">Mark as watched</button>
@@ -32,14 +32,15 @@ const createFilmTemplate = (film) => {
 };
 
 export default class Film extends AbstractComponent {
-  constructor(film) {
+  constructor(film, countComments) {
     super();
 
     this._film = film;
+    this._countComments = countComments;
   }
 
   getTemplate() {
-    return createFilmTemplate(this._film);
+    return createFilmTemplate(this._film, this._countComments);
   }
 
   setKitElementsClickHandler(handler) {

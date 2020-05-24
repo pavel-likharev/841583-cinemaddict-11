@@ -1,4 +1,7 @@
-import {getRandomArrayItem} from 'src/utils/common.js';
+import {getRandomArrayItem, getRandomIntegerNumber} from 'src/utils/common.js';
+
+const MIN_COUNT_COMMENTS = 1;
+const MAX_COUNT_COMMENTS = 4;
 
 const Emojis = [
   `sleeping`,
@@ -30,10 +33,17 @@ const generateComment = () => {
   };
 };
 
+const generatePackComments = () => {
+  const countComments = getRandomIntegerNumber(MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS);
+  return new Array(countComments)
+    .fill(``)
+    .map(generateComment);
+};
+
 const generateComments = (count) => {
   return new Array(count)
     .fill(``)
-    .map(generateComment);
+    .map(generatePackComments);
 };
 
 export {generateComments};

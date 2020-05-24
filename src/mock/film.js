@@ -1,12 +1,9 @@
 import {getRandomIntegerNumber, getRandomArrayItem} from 'src/utils/common.js';
-import {generateComments} from 'src/mock/comments.js';
 
 const MIN_COUNT_SENTENCES = 1;
 const MAX_COUNT_SENTENCES = 5;
 const MIN_COUNT_GENRES = 1;
 const MAX_COUNT_GENRES = 3;
-const MIN_COUNT_COMMENTS = 1;
-const MAX_COUNT_COMMENTS = 4;
 const MIN_AGE_RATING = 0;
 const MAX_AGE_RATING = 18;
 const MIN_FILM_RATING = 0;
@@ -72,7 +69,6 @@ const generateRandomBoolean = () => Math.random() > 0.5;
 
 const generateFilm = () => {
   const randomGenres = getRandomGenres();
-  const commentsCount = getRandomIntegerNumber(MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS);
   const year = getRandomDate();
   const duration = getRandomDate();
 
@@ -90,11 +86,10 @@ const generateFilm = () => {
     genre: randomGenres[0],
     genres: randomGenres,
     description: getRandomSentencesFromDescription(),
-    countComments: commentsCount,
-    comments: generateComments(commentsCount),
     isWatchlist: generateRandomBoolean(),
     isHistory: generateRandomBoolean(),
     isFavorite: generateRandomBoolean(),
+    comments: null,
   };
 };
 

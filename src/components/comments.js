@@ -59,13 +59,13 @@ const createListEmojisTemplate = (listEmojis) => {
   );
 };
 
-const createCommentsTemplate = (film, currentEmoji) => {
+const createCommentsTemplate = (comments, countComments, currentEmoji) => {
   return (
     `<div class="form-details__bottom-container">
     <section class="film-details__comments-wrap">
-      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.countComments}</span></h3>
+      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${countComments}</span></h3>
 
-      ${createListCommentsTemplate(film.comments)}
+      ${createListCommentsTemplate(comments)}
 
       <div class="film-details__new-comment">
         <div for="add-emoji" class="film-details__add-emoji-label">${createImageEmojiTemplate(currentEmoji)}</div>
@@ -83,18 +83,19 @@ const createCommentsTemplate = (film, currentEmoji) => {
 };
 
 export default class Comments extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(packComments, countComments) {
     super();
 
-    this._film = film;
+    this._packComments = packComments;
+    this._countComments = countComments;
 
     this._currentEmoji = null;
 
-    this._subscribeOnEvents();
+    // this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createCommentsTemplate(this._film, this._currentEmoji);
+    return createCommentsTemplate(this._packComments, this._countComments, this._currentEmoji);
   }
 
   recoveryListeners() {
@@ -105,16 +106,26 @@ export default class Comments extends AbstractSmartComponent {
     super.rerender();
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
+  setDeleteButtonClickHandler(handler) {
+    const listButtons = Array.from(this.getElement().querySelectorAll(`.film-details__comment-delete`));
 
-    const listEmojis = Array.from(element.querySelectorAll(`.film-details__emoji-item`));
+    listButtons.forEach((button) => {
+      button.addEventListener(`click`, handler);
 
-    listEmojis.forEach((emoji) => {
-      emoji.addEventListener(`click`, () => {
-        this._currentEmoji = emoji.value;
-        this.rerender();
-      });
+      this._deleteButtonClickHandler = handler;
     });
   }
+
+  // _subscribeOnEvents() {
+  //   const element = this.getElement();
+
+  //   const listEmojis = Array.from(element.querySelectorAll(`.film-details__emoji-item`));
+
+  //   listEmojis.forEach((emoji) => {
+  //     emoji.addEventListener(`click`, () => {
+  //       this._currentEmoji = emoji.value;
+  //       this.rerender();
+  //     });
+  //   });
+  // }
 }

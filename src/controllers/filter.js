@@ -41,6 +41,18 @@ export default class FilterController {
   }
 
   _onFilterChange(filterType) {
+    const oldFilterElement = this._filterComponent.getElement().querySelector(`#${this._activeFilterType}`);
+    oldFilterElement.classList.remove(`main-navigation__item--active`);
+
+    const newFilterElement = this._filterComponent.getElement().querySelector(`#${filterType}`);
+    newFilterElement.classList.add(`main-navigation__item--active`);
+
+    const oldSorting = document.querySelector(`.sort__button--active`);
+    oldSorting.classList.remove(`sort__button--active`);
+
+    const newSorting = document.querySelector(`[data-sort-type=default]`);
+    newSorting.classList.add(`sort__button--active`);
+
     this._filmsModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }
